@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import * as url from "url";
 import { program } from "commander";
 import { name, displayName, description, version } from "./package.json";
 import logSymbols from "log-symbols";
@@ -75,4 +76,7 @@ program.on("command:*", () => {
   program.help();
 });
 
-program.parse();
+if (process.argv[1] === url.fileURLToPath(import.meta.url)) {
+  program.parse();
+}
+

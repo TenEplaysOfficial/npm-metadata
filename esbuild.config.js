@@ -1,5 +1,6 @@
 import fs from "fs";
 import { build } from "esbuild";
+import path from "path";
 
 const pkg = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
@@ -18,4 +19,12 @@ build({
   minify: true,
   sourcemap: false,
   logLevel: "info",
-}).catch(() => process.exit(1));
+})
+  .then(() => {
+    fs.copyFileSync(
+      path.resolve("index.d.ts"),
+      path.resolve("dist/index.d.ts")
+    );
+    console.log("Copied index.d.ts to dist/");
+  })
+  .catch(() => process.exit(1));

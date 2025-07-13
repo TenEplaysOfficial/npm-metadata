@@ -7,25 +7,38 @@ import logSymbols from "log-symbols";
 
 program.name(displayName).description(description).version(version);
 
-export async function metadata(name) {
+export async function metadata(name, options = { silentLog: false }) {
+  const { silentLog } = options;
+
   if (!name) {
-    console.error("Package name is required.");
+    if (!silentLog) {
+      console.error("Package name is required.");
+    }
     return;
   }
+
   const fetchURL = `https://registry.npmjs.org/${name}`;
 
   try {
-    console.log("Fetching package metadata for:", name);
+    if (!silentLog) {
+      console.log("Fetching package metadata for:", name);
+    }
     const res = await fetch(fetchURL);
     if (!res.ok) {
-      console.error(`Failed to fetch package metadata for ${name}.`);
+      if (!silentLog) {
+        console.error(`Failed to fetch package metadata for ${name}.`);
+      }
       return;
     }
     const data = await res.json();
-    console.log("Package metadata fetched successfully.");
+    if (!silentLog) {
+      console.log("Package metadata fetched successfully.");
+    }
     return data;
   } catch (err) {
-    console.error(`Error fetching package metadata: ${err.message}`);
+    if (!silentLog) {
+      console.error(`Error fetching package metadata: ${err.message}`);
+    }
   }
 }
 
@@ -79,4 +92,3 @@ program.on("command:*", () => {
 if (process.argv[1] === url.fileURLToPath(import.meta.url)) {
   program.parse();
 }
-
